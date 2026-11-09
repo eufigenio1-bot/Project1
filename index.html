@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiz de Curiosidades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e6f1fb;--ink:#0d2240;--muted:#4b6585;--card:#fff;--line:#b5cee6;--accent:#e8741a;--accent-ink:#fff;--ok:#17805a;--okbg:#d6f3e6;--bad:#c5362c;--badbg:#fbdcd8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1630;--ink:#eaf2ff;--muted:#9bb2d6;--card:#13264b;--line:#2b4577;--accent:#ffa042;--accent-ink:#1a1204;--ok:#4fd39a;--okbg:#0f3a2e;--bad:#ff7d72;--badbg:#4a1f26;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a1630;--ink:#eaf2ff;--muted:#9bb2d6;--card:#13264b;--line:#2b4577;--accent:#ffa042;--accent-ink:#1a1204;--ok:#4fd39a;--okbg:#0f3a2e;--bad:#ff7d72;--badbg:#4a1f26;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:18px;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding:20px 20px 40px}
+h1,h2,.q{font-family:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;margin:0;line-height:1.12}
+.hero{text-align:center;padding:9vh 0 0}
+.hero h1{font-size:clamp(40px,9vw,76px);font-weight:800;letter-spacing:-.02em}
+.hero p{color:var(--muted);max-width:46ch;margin:18px auto 28px}
+.btn{font:inherit;font-weight:600;border:0;border-radius:14px;padding:14px 26px;cursor:pointer;background:var(--accent);color:var(--accent-ink);font-size:19px}
+.btn.alt{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.top{display:flex;justify-content:space-between;align-items:baseline;color:var(--muted);font-weight:600;margin-bottom:10px}
+.bar{height:14px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:28px}
+.bar i{display:block;height:100%;width:100%;background:var(--accent);border-radius:99px}
+.bar.low i{background:var(--bad)}
+.q{font-size:clamp(28px,5.6vw,46px);font-weight:700;letter-spacing:-.01em;margin:0}
+.qrow{display:flex;gap:22px;align-items:center;margin-bottom:28px}
+.pic{flex:none;width:clamp(96px,20vw,168px);aspect-ratio:1;border-radius:28px;background:var(--card);border:2px solid var(--line);display:grid;place-items:center;font-size:clamp(56px,12vw,104px);line-height:1}
+@media (max-width:560px){.qrow{flex-direction:column;align-items:flex-start}}
+.rv{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:10px;max-width:620px;margin:0 auto 30px}
+.rv span{border-radius:14px;padding:8px 0;font-size:22px;text-align:center;background:var(--card);border:2px solid var(--line)}
+.rv .y{border-color:var(--ok);background:var(--okbg)}
+.rv .n{border-color:var(--bad);background:var(--badbg)}
+.opts{display:grid;gap:14px}
+.opt{display:flex;gap:16px;align-items:center;text-align:left;width:100%;font:inherit;font-size:clamp(18px,3.4vw,24px);color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:16px;padding:16px 18px;cursor:pointer}
+.opt b{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--bg);font-family:"Bricolage Grotesque",sans-serif;font-size:22px}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}
+.opt.ok b{background:var(--ok);color:var(--card)}
+.opt.bad{background:var(--badbg);border-color:var(--bad)}
+.opt.bad b{background:var(--bad);color:var(--card)}
+.opt.dim{opacity:.55}
+.exp{margin-top:22px;padding:16px 18px;border-left:5px solid var(--ok);background:var(--card);border-radius:0 14px 14px 0}
+.exp.late{border-color:var(--bad)}
+.exp strong{display:block;margin-bottom:2px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.hint{color:var(--muted);font-size:15px;margin-top:26px}
+.end{text-align:center;padding-top:8vh}
+.end h2{font-size:clamp(34px,7vw,60px);font-weight:800}
+.score{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(64px,16vw,130px);font-weight:800;color:var(--accent);line-height:1;margin:18px 0}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:no-preference){.opt{transition:border-color .15s,background .15s}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<section id="start" class="hero">
+  <h1>Quiz de Curiosidades</h1>
+  <p>20 perguntas de ciência e natureza, 30 segundos para cada. Clica na resposta escolhida pelo público ou usa as teclas A, B e C.</p>
+  <button class="btn" id="go">Começar o quiz</button>
+</section>
+
+<section id="game" hidden>
+  <div class="top"><span id="prog"></span><span id="pts"></span></div>
+  <div class="bar" id="bar"><i id="fill"></i></div>
+  <div class="qrow"><div class="pic" id="pic" aria-hidden="true"></div><h2 class="q" id="q"></h2></div>
+  <div class="opts" id="opts"></div>
+  <div class="exp" id="exp" hidden></div>
+  <div class="actions">
+    <button class="btn alt" id="rev">Mostrar resposta (R)</button>
+    <button class="btn" id="next" hidden>Seguinte (Enter)</button>
+  </div>
+  <p class="hint">As respostas são baralhadas em cada jogo, por isso a certa muda de posição.</p>
+</section>
+
+<section id="end" class="end" hidden>
+  <h2 id="endt"></h2>
+  <div class="score" id="endn"></div>
+  <p id="endm"></p>
+  <div class="rv" id="rv"></div>
+  <button class="btn" id="again">Jogar outra vez</button>
+</section>
+
+</main>
+<script>
+// A primeira opção de cada pergunta é a certa; as opções são baralhadas ao jogar.
+var Q=[
+["Porque é que o céu é azul?",["A atmosfera dispersa mais a luz azul","Reflete o mar","Por causa da poluição"],"A luz azul tem comprimento de onda curto e é dispersa em todas as direções pelas moléculas do ar."],
+["Qual é o planeta mais quente do Sistema Solar?",["Vénus","Mercúrio","Marte"],"A atmosfera densa de Vénus retém o calor e passa dos 460 °C, mais do que em Mercúrio."],
+["Quantos ossos tem um adulto?",["206","106","306"],"Os bebés nascem com cerca de 300 ossos, que se vão fundindo ao crescer."],
+["Qual é o animal terrestre mais rápido?",["Chita","Leão","Cavalo"],"A chita chega aos 100 km/h em arrancadas curtas."],
+["Porque vemos o relâmpago antes de ouvir o trovão?",["A luz viaja muito mais depressa que o som","O trovão acontece depois","O som é abafado pelas nuvens"],"Acontecem ao mesmo tempo, mas a luz chega quase instantaneamente e o som demora a chegar."],
+["Qual é o único mamífero capaz de voar?",["Morcego","Esquilo-voador","Pinguim"],"O esquilo-voador só plana, enquanto o morcego bate as asas."],
+["Qual é o elemento mais abundante no universo?",["Hidrogénio","Oxigénio","Carbono"],"O hidrogénio representa cerca de três quartos da matéria normal do universo."],
+["Quanto tempo demora a luz do Sol a chegar à Terra?",["8 minutos","8 segundos","8 horas"],"São cerca de 8 minutos e 20 segundos."],
+["Quantos corações tem um polvo?",["3","1","2"],"Dois bombeiam sangue pelas guelras e um pelo resto do corpo."],
+["Qual é o maior órgão do corpo humano?",["Pele","Fígado","Intestino"],"A pele de um adulto cobre cerca de 2 m²."],
+["Porque é que o mar é salgado?",["Os rios levam sais das rochas para o mar","Alguém lhe deitou sal","Por causa dos peixes"],"A chuva desgasta as rochas e os rios arrastam os sais, que se acumulam no oceano."],
+["Qual é, aproximadamente, a velocidade do som no ar?",["343 m/s","34 m/s","3430 m/s"],"Cerca de 1235 km/h, a 20 °C."],
+["Qual é o maior animal do mundo?",["Baleia-azul","Elefante-africano","Tubarão-baleia"],"Chega aos 30 metros e é o maior animal que alguma vez existiu."],
+["Qual destes animais dorme mais horas por dia?",["Coala","Cão","Cavalo"],"O coala dorme até 20 horas por dia, porque as folhas de eucalipto dão pouca energia."],
+["Qual é o único metal líquido à temperatura ambiente?",["Mercúrio","Ferro","Alumínio"],"O mercúrio só solidifica abaixo de −39 °C."],
+["Que gás as plantas absorvem para fazer a fotossíntese?",["Dióxido de carbono","Oxigénio","Azoto"],"Usam o CO₂ e a luz para produzir açúcares e libertam oxigénio."],
+["Quantos planetas tem o Sistema Solar?",["8","7","9"],"Plutão deixou de ser classificado como planeta em 2006."],
+["Qual é o osso mais comprido do corpo humano?",["Fémur","Úmero","Tíbia"],"O fémur, na coxa, pode ter um quarto da altura da pessoa."],
+["Porque é que a Lua tem fases?",["Vemos partes diferentes da face iluminada pelo Sol","A sombra da Terra tapa parte dela","As nuvens escondem-na"],"A sombra da Terra só causa os eclipses lunares. As fases dependem da posição da Lua."],
+["A que temperatura ferve a água ao nível do mar?",["100 °C","90 °C","120 °C"],"Em montanhas altas ferve a temperaturas mais baixas, porque a pressão é menor."]
+];
+var T=30,L=["A","B","C"],$=function(i){return document.getElementById(i)};
+var order,i,score,done,t0,timer,res;
+// Imagem de cada pergunta, pela mesma ordem da lista acima.
+var E=["🌤️","🪐","🦴","🐆","⚡","🦇","⚛️","☀️","🐙","🖐️","🌊","🔊","🐋","🐨","🌡️","🌱","🌌","🦵","🌗","♨️"];
+
+function shuffle(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var x=a[k];a[k]=a[j];a[j]=x}return a}
+function show(id){["start","game","end"].forEach(function(s){$(s).hidden=s!==id})}
+
+function begin(){order=shuffle(Q.map(function(_,k){return k}));i=0;score=0;res=[];show("game");ask()}
+function ask(){
+  var d=Q[order[i]];done=false;
+  var opts=shuffle(d[1].map(function(t,k){return{t:t,ok:k===0}}));
+  d.cur=opts;
+  $("prog").textContent="Pergunta "+(i+1)+" de "+Q.length;
+  $("pts").textContent=score+" certas";
+  $("q").textContent=d[0];$("pic").textContent=E[order[i]];
+  var box=$("opts");box.innerHTML="";
+  opts.forEach(function(o,k){
+    var b=document.createElement("button");b.className="opt";b.type="button";
+    b.innerHTML="<b>"+L[k]+"</b><span></span>";b.lastChild.textContent=o.t;
+    b.onclick=function(){reveal(k)};box.appendChild(b);
+  });
+  $("exp").hidden=true;$("next").hidden=true;$("rev").hidden=false;
+  $("bar").classList.remove("low");$("fill").style.width="100%";
+  t0=Date.now();clearInterval(timer);
+  timer=setInterval(tick,100);
+}
+function tick(){
+  var left=Math.max(0,T-(Date.now()-t0)/1000);
+  $("fill").style.width=(left/T*100)+"%";
+  $("bar").classList.toggle("low",left<=8);
+  if(left<=0)reveal(-1);
+}
+function reveal(pick){
+  if(done)return;done=true;clearInterval(timer);
+  var d=Q[order[i]],btns=$("opts").children,right=-1;
+  d.cur.forEach(function(o,k){
+    var b=btns[k];b.disabled=true;
+    if(o.ok){right=k;b.classList.add("ok")}
+    else if(k===pick)b.classList.add("bad");
+    else b.classList.add("dim");
+  });
+  var hit=pick===right;
+  if(hit)score++;res[i]=hit;
+  $("pts").textContent=score+" certas";
+  var e=$("exp");e.hidden=false;e.className="exp"+(pick===-2||hit?"":" late");
+  e.innerHTML="<strong></strong><span></span>";
+  e.firstChild.textContent=pick===-2?"A resposta certa é "+L[right]+".":hit?"Certo!":(pick===-1?"Acabou o tempo. A certa era "+L[right]+".":"Quase! A certa era "+L[right]+".");
+  e.lastChild.textContent=d[2];
+  $("rev").hidden=true;$("next").hidden=false;
+  $("next").textContent=i===Q.length-1?"Ver resultado (Enter)":"Seguinte (Enter)";
+  if(document.activeElement)document.activeElement.blur();
+}
+function next(){
+  if(i>=Q.length-1){finish();return}
+  i++;ask();
+}
+function finish(){
+  show("end");
+  var p=score/Q.length;
+  $("endt").textContent=p>=.9?"Mestre das curiosidades!":p>=.6?"Muito bem!":"Boa tentativa!";
+  $("endn").textContent=score+"/"+Q.length;
+  var rv=$("rv");rv.innerHTML="";
+  order.forEach(function(q,k){var s=document.createElement("span");s.className=res[k]?"y":"n";s.textContent=E[q]+(res[k]?" ✓":" ✗");s.title=Q[q][0];rv.appendChild(s)});
+  $("endm").textContent=p>=.9?"Quase impecável.":p>=.6?"Já sabes bastante, mas ainda há surpresas.":"Há muito para descobrir. Joga outra vez!";
+}
+$("go").onclick=begin;$("again").onclick=begin;$("next").onclick=next;
+$("rev").onclick=function(){reveal(-2)};
+document.addEventListener("keydown",function(ev){
+  if($("game").hidden)return;
+  var k=ev.key.toLowerCase();
+  if(!done){
+    var n="abc".indexOf(k);if(n<0)n="123".indexOf(k);
+    if(n>=0){reveal(n)}else if(k==="r"){reveal(-2)}
+  }else if(k==="enter"||k===" "){ev.preventDefault();next()}
+});
+</script>
+</body>
+</html>
